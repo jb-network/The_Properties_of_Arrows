@@ -6,7 +6,7 @@
 //Main
 StartMenu();
 Arrow ArrowOne = ArrowFactory(); // Call Arrow Factory, this allows more than one instance of arrow to be created or added later
-float ArrowCost = ArrowOne.GetCost();
+float ArrowCost = ArrowOne.GetCost;
 FinalCloseOut(ArrowOne, ArrowCost);
 
 //Methods
@@ -89,9 +89,9 @@ void FinalCloseOut(Arrow arrowOne, float arrowCost)
     Console.Clear();
     Console.WriteLine("*******************Arrow Factory 3000: Processing order******************");
     Console.WriteLine($"The arrow you created has the following characteristics: " +
-    $"\nThe Arrowhead is made of {ArrowOne.GetArrowhead()}" +
-    $"\nThe Fletching is made of {ArrowOne.GetFletchingMaterial()} " +
-    $"\nThe Shaft is {ArrowOne.GetTotalLength()} cm");
+    $"\nThe Arrowhead is made of {ArrowOne.arrowhead}" +
+    $"\nThe Fletching is made of {ArrowOne.fletchingmaterial} " +
+    $"\nThe Shaft is {ArrowOne.totallength} cm");
     Console.WriteLine($"\nThis type of custom arrow costs a total of {ArrowCost} gold per arrow");
     Console.Write($"\nHow many of these arrows would you like to order?: ");
     float TotalCost = Convert.ToSingle(Console.ReadLine());
@@ -105,44 +105,49 @@ class Arrow
 {
     //must be set to Arrowhead because of the enum
     //must be set to Fletchingmaterial because of enum
-    // Set to private
-    private Arrowhead _ArrowHead;
-    private Fletchingmaterial _FletchingMaterial;
-    private float _TotalLength;
+    // Set to public and use get
+    public Arrowhead arrowhead { get; }
+    public Fletchingmaterial fletchingmaterial { get; }
+    public float totallength { get; }
 
     //must be set to Arrowhead because of the enum
-    //must be set to Fletchingmaterial because of enum 
+    //must be set to Fletchingmaterial because of enum
+    // Updated Lines 92 - 94 to use "get" in property rather than get methods. 
     public Arrow(Arrowhead ArrowHead, Fletchingmaterial FletchingMaterial, float TotalLength)
     {
-        _ArrowHead = ArrowHead;
-        _FletchingMaterial = FletchingMaterial;
-        _TotalLength = TotalLength;
+        arrowhead = ArrowHead;
+        fletchingmaterial = FletchingMaterial;
+        totallength = TotalLength;
     }
-    //Used get to work around private setting (used by lines 93 -95)
-    public Arrowhead GetArrowhead() => _ArrowHead;
-    public Fletchingmaterial GetFletchingMaterial() => _FletchingMaterial;
-    public float GetTotalLength() => _TotalLength;
-    //Method for total price
-    public float GetCost()
+
+    //Method for total price replaced with get. Had to replace the method call on line 9
+    public float GetCost
+
     {
-        float HeadCost = _ArrowHead switch
+        get
         {
-            Arrowhead.Steel => 10,
-            Arrowhead.Wood => 3,
-            Arrowhead.Obsidian => 5
-        };
+            float HeadCost = arrowhead switch
+            {
+                Arrowhead.Steel => 10,
+                Arrowhead.Wood => 3,
+                Arrowhead.Obsidian => 5
+            };
 
-        float FletchingCost = _FletchingMaterial switch
-        {
-            Fletchingmaterial.Plastic => 10,
-            Fletchingmaterial.TurkeyFeathers => 5,
-            Fletchingmaterial.GooseFeathers => 3,
-        };
+            float FletchingCost = fletchingmaterial switch
+            {
+                Fletchingmaterial.Plastic => 10,
+                Fletchingmaterial.TurkeyFeathers => 5,
+                Fletchingmaterial.GooseFeathers => 3,
+            };
 
-        float LengthCost = .05f * _TotalLength;
-        return HeadCost + FletchingCost + LengthCost;
+            float LengthCost = .05f * totallength;
+            return HeadCost + FletchingCost + LengthCost;
+
+        }
     }
 }
+
+
 
 //Enum
 enum Arrowhead { Steel, Wood, Obsidian }
